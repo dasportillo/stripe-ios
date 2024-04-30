@@ -104,6 +104,15 @@ class PlaygroundController: ObservableObject {
         return nil
     }
 
+    var optOutCollectingConsentForSavedPaymentMethods: Bool {
+        switch settings.optOutCollectConsent {
+        case .disabled:
+            return false
+        case .enabled:
+            return true
+        }
+    }
+
     var configuration: PaymentSheet.Configuration {
         var configuration = PaymentSheet.Configuration()
         configuration.externalPaymentMethodConfiguration = externalPaymentMethodConfiguration
@@ -158,6 +167,7 @@ class PlaygroundController: ObservableObject {
                 return self?.addressDetails
             }
         }
+        configuration.optOutCollectingConsentForSavedPaymentMethods = optOutCollectingConsentForSavedPaymentMethods
         configuration.primaryButtonLabel = settings.customCtaLabel
 
         configuration.billingDetailsCollectionConfiguration.name = .init(rawValue: settings.collectName.rawValue)!

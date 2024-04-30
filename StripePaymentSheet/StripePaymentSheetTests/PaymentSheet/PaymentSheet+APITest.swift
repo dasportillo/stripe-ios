@@ -343,12 +343,12 @@ class PaymentSheetAPITest: XCTestCase {
     }
     var valid_card_checkbox_selected: IntentConfirmParams {
         let intentConfirmParams = IntentConfirmParams(params: ._testValidCardValue(), type: .stripe(.card))
-        intentConfirmParams.saveForFutureUseCheckboxState = .selected
+        intentConfirmParams.consentCheckboxState = .selected
         return intentConfirmParams
     }
     var valid_card_checkbox_deselected: IntentConfirmParams {
         let intentConfirmParams = IntentConfirmParams(params: ._testValidCardValue(), type: .stripe(.card))
-        intentConfirmParams.saveForFutureUseCheckboxState = .deselected
+        intentConfirmParams.consentCheckboxState = .deselected
         return intentConfirmParams
     }
     func createValidSavedPaymentMethod() -> STPPaymentMethod {

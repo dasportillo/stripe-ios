@@ -146,6 +146,9 @@ extension PaymentSheet {
         /// @see SavePaymentMethodOptInBehavior
         public var savePaymentMethodOptInBehavior: SavePaymentMethodOptInBehavior = .automatic
 
+        /// Controls visibility of a checkbox to collect shopper consent when saving a payment method to the merchant
+        @_spi(STP) public var optOutCollectingConsentForSavedPaymentMethods: Bool = false
+
         /// Describes the appearance of PaymentSheet
         public var appearance = PaymentSheet.Appearance.default
 
@@ -518,5 +521,39 @@ extension PaymentSheet.CustomerConfiguration {
         case .customerSession:
             return intent?.elementsSession.customer?.customerSession.apiKey
         }
+    }
+}
+extension PaymentSheet.Configuration {
+    /// Modes for collecting consent when saving a payment method
+    internal enum SavePaymentMethodConsentCheckboxDisplayBehavior: Equatable {
+        /// Only shows a checkbox for savable payment methods when both are true:
+        ///  Using a PaymentIntent with SFU disabled
+        ///  `customer` is passed into PaymentSheet.Configuration
+        ///
+        ///  The following values are sent for allow_redisplay:
+        ///  For PaymentIntent+SFU, SetupIntent:
+        ///     No checkbox shown - "unspecified"
+        ///  For PaymentIntent:
+        ///     Checkbox is shown, but is unchecked -  "limited"
+        ///     Checkbox is shown, and is checked - "always"
+        case legacy
+
+        /// Same UX as 'legacy', however following values are sent for alllow_redisplay:
+        ///
+        ///  For PaymentIntent+SFU, SetupIntent:
+        ///     'No checkbox shown - "limited"
+        ///  For PaymentIntent:
+        ///     Checkbox is shown, but is unchecked -  "limited"
+        ///     Checkbox is shown, and is checked - "always"
+        case optOutConsentCheckbox
+
+        /// Always shows a consent checkbox for savable payment methods to set the value of allow_redisplay on the payment method.
+        /// For more information, see:
+        /// https://docs.stripe.com/api/payment_methods/object#payment_method_object-allow_redisplay
+        ///
+        ///  For PaymentIntent, PaymentIntent+SFU, SetupIntent:
+        ///     Checkbox is shown, but is unchecked -  "limited"
+        ///     Checkbox is shown, and is checked - "always"
+        case showConsentCheckbox
     }
 }

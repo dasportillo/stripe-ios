@@ -15,7 +15,7 @@ import UIKit
 /// - Note: Assumes you're confirming with a new payment method, unless a payment method ID is provided
 class IntentConfirmParams {
     /// An enum for the three possible states of the e.g. "Save this card for future payments" checkbox
-    enum SaveForFutureUseCheckboxState {
+    enum ConsentCheckboxState {
         /// The checkbox wasn't displayed
         case hidden
         /// The checkbox was displayed and selected
@@ -28,8 +28,8 @@ class IntentConfirmParams {
     let paymentMethodType: PaymentSheet.PaymentMethodType
     let confirmPaymentMethodOptions: STPConfirmPaymentMethodOptions
 
-    /// True if the customer opts to save their payment method for future payments.
-    var saveForFutureUseCheckboxState: SaveForFutureUseCheckboxState = .hidden
+    /// Checkbox used to gathering consent to save the paymentMethod to the merchant
+    var consentCheckboxState: ConsentCheckboxState = .hidden
     /// If `true`, a mandate (e.g. "By continuing you authorize Foo Corp to use your payment details for recurring payments...") was displayed to the customer.
     var didDisplayMandate: Bool = false
 

@@ -46,7 +46,11 @@ class PaymentSheetFormFactory {
     }
 
     var shouldDisplaySaveCheckbox: Bool {
-        return !isSettingUp && configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
+        if configuration.savePaymentMethodConsentBehavior == .showConsentCheckbox {
+            return configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
+        } else {
+            return !isSettingUp && configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
+        }
     }
 
     var theme: ElementsUITheme {
@@ -368,9 +372,9 @@ extension PaymentSheetFormFactory {
         didToggle: ((Bool) -> Void)? = nil
     ) -> PaymentMethodElementWrapper<CheckboxElement> {
         let isSelectedByDefault: Bool = {
-            if let previousCustomerInput = previousCustomerInput, previousCustomerInput.saveForFutureUseCheckboxState != .hidden {
+            if let previousCustomerInput = previousCustomerInput, previousCustomerInput.consentCheckboxState != .hidden {
                 // Use the previous customer input checkbox state if it was shown
-                return previousCustomerInput.saveForFutureUseCheckboxState == .selected
+                return previousCustomerInput.consentCheckboxState == .selected
             } else {
                 // Otherwise, use the default selected state
                 return configuration.savePaymentMethodOptInBehavior.isSelectedByDefault
@@ -384,9 +388,23 @@ extension PaymentSheetFormFactory {
         )
         return PaymentMethodElementWrapper(element) { checkbox, params in
             if checkbox.checkboxButton.isHidden {
-                params.saveForFutureUseCheckboxState = .hidden
+                params.consentCheckboxState = .hidden
+                /* TODO: Decide rules for allowRedisplay
+                switch self.configuration.savePaymentMethodConsentBehavior {
+                case .legacy:
+                    params.paymentMethodParams.allowRedisplay = .unspecified
+                case .optOutConsentCheckbox:
+                    params.paymentMethodParams.allowRedisplay = .limited
+                case .showConsentCheckbox:
+                    // TODO: Send event for error state
+                    params.paymentMethodParams.allowRedisplay = .unspecified
+                }
+                */
             } else {
-                params.saveForFutureUseCheckboxState = checkbox.checkboxButton.isSelected ? .selected : .deselected
+                params.consentCheckboxState = checkbox.checkboxButton.isSelected ? .selected : .deselected
+                /* TODO: Decide rules for allowRedisplay
+                 params.paymentMethodParams.allowRedisplay = checkbox.checkboxButton.isSelected ? .always : .limited
+                 */
             }
             return params
         }

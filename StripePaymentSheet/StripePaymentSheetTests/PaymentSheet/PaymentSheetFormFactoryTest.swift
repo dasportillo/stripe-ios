@@ -1510,7 +1510,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(params.paymentMethodParams.card?.expYear, cardValues.expYear)
         XCTAssertEqual(params.paymentMethodParams.card?.cvc, cardValues.cvc)
         // ...and the checkbox state should be enabled (the default)
-        XCTAssertEqual(params.saveForFutureUseCheckboxState, .selected)
+        XCTAssertEqual(params.consentCheckboxState, .selected)
     }
 
     func testAppliesPreviousCustomerInput_checkbox() {
@@ -1543,24 +1543,24 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let cardForm_setup = makeCardForm(isSettingUp: true, previousCustomerInput: previousCustomerInput)
         // ...should have the checkbox hidden
         let cardForm_setup_params = cardForm_setup.updateParams(params: .init(type: .stripe(.card)))
-        XCTAssertEqual(cardForm_setup_params?.saveForFutureUseCheckboxState, .hidden)
+        XCTAssertEqual(cardForm_setup_params?.consentCheckboxState, .hidden)
 
         // Making another card form for payment using the previous card form's input...
         let cardForm_payment = makeCardForm(isSettingUp: false, previousCustomerInput: cardForm_setup_params)
         // ...should have the checkbox selected (the default)
         let cardForm_payment_params = cardForm_payment.updateParams(params: .init(type: .stripe(.card)))
-        XCTAssertEqual(cardForm_payment_params?.saveForFutureUseCheckboxState, .selected)
+        XCTAssertEqual(cardForm_payment_params?.consentCheckboxState, .selected)
 
         // Deselecting the checkbox...
         let saveCheckbox = cardForm_payment.getAllUnwrappedSubElements().compactMap({ $0 as? CheckboxElement }).first(where: { $0.label.hasPrefix("Save") })
         saveCheckbox?.isSelected = false
         let cardForm_payment_params_checkbox_deselected = cardForm_payment.updateParams(params: .init(type: .stripe(.card)))
-        XCTAssertEqual(cardForm_payment_params_checkbox_deselected?.saveForFutureUseCheckboxState, .deselected)
+        XCTAssertEqual(cardForm_payment_params_checkbox_deselected?.consentCheckboxState, .deselected)
         // ...and making another card form...
         let cardForm_payment_2 = makeCardForm(isSettingUp: false, previousCustomerInput: cardForm_payment_params_checkbox_deselected)
         // ...should have the checkbox deselected, preserving the previous customer input
         let cardForm_payment_2_params = cardForm_payment_2.updateParams(params: .init(type: .stripe(.card)))
-        XCTAssertEqual(cardForm_payment_2_params?.saveForFutureUseCheckboxState, .deselected)
+        XCTAssertEqual(cardForm_payment_2_params?.consentCheckboxState, .deselected)
 
     }
 

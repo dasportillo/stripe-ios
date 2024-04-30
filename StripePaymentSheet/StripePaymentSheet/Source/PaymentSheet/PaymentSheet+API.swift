@@ -151,7 +151,7 @@ extension PaymentSheet {
                     confirmPaymentMethodType: .new(
                         params: confirmParams.paymentMethodParams,
                         paymentOptions: confirmParams.confirmPaymentMethodOptions,
-                        shouldSave: confirmParams.saveForFutureUseCheckboxState == .selected
+                        shouldSave: confirmParams.consentCheckboxState == .selected
                     ),
                     paymentIntent: paymentIntent,
                     configuration: configuration
@@ -213,7 +213,7 @@ extension PaymentSheet {
                     confirmType: .new(
                         params: confirmParams.paymentMethodParams,
                         paymentOptions: confirmParams.confirmPaymentMethodOptions,
-                        shouldSave: confirmParams.saveForFutureUseCheckboxState == .selected
+                        shouldSave: confirmParams.consentCheckboxState == .selected
                     ),
                     configuration: configuration,
                     intentConfig: intentConfig,
@@ -456,11 +456,11 @@ extension PaymentSheet {
                     case .success:
                         STPAnalyticsClient.sharedClient.logLinkSignupComplete()
 
-                        createPaymentDetailsAndConfirm(linkAccount, intentConfirmParams.paymentMethodParams, intentConfirmParams.saveForFutureUseCheckboxState == .selected)
+                        createPaymentDetailsAndConfirm(linkAccount, intentConfirmParams.paymentMethodParams, intentConfirmParams.consentCheckboxState == .selected)
                     case .failure(let error as NSError):
                         STPAnalyticsClient.sharedClient.logLinkSignupFailure(error: error)
                         // Attempt to confirm directly with params as a fallback.
-                        confirmWithPaymentMethodParams(intentConfirmParams.paymentMethodParams, linkAccount, intentConfirmParams.saveForFutureUseCheckboxState == .selected)
+                        confirmWithPaymentMethodParams(intentConfirmParams.paymentMethodParams, linkAccount, intentConfirmParams.consentCheckboxState == .selected)
                     }
                 }
             case .withPaymentMethod(let paymentMethod):

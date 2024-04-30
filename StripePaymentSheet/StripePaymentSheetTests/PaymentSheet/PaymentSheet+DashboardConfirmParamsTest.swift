@@ -177,7 +177,7 @@ final class PaymentSheet_ConfirmParamsTest: APIStubbedTestCase {
 
     func testDashboard_DeferredPaymentIntent_new_saveChecked() {
         let intentConfirmParams = MockParams.intentConfirmParams
-        intentConfirmParams.saveForFutureUseCheckboxState = .selected
+        intentConfirmParams.consentCheckboxState = .selected
 
         stubConfirmPaymentExpecting(
             isPaymentIntent: true,

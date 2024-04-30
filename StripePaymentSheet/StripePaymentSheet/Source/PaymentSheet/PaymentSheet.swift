@@ -108,6 +108,11 @@ public class PaymentSheet {
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentSheet.self)
         self.mode = mode
         self.configuration = configuration
+        if case .legacyCustomerEphemeralKey = configuration.customer?.customerAccessProvider {
+            assert(configuration.optOutCollectingConsentForSavedPaymentMethods == false,
+                   "Changing the consent checkbox behavior is not supported for legacy ephemeral keys. Integrate with CustomerSessions to use this feature.  See: https://docs.stripe.com/api/customer_sessions")
+        }
+
         STPAnalyticsClient.sharedClient.logPaymentSheetInitialized(configuration: configuration,
                                                                    intentConfig: mode.intentConfig)
     }

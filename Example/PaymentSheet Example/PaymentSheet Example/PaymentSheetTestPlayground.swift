@@ -42,6 +42,7 @@ struct PaymentSheetTestPlayground: View {
         }
         Group {
             SettingView(setting: $playgroundController.settings.linkEnabled)
+            SettingView(setting: consentCheckboxBinding)
             SettingView(setting: $playgroundController.settings.userOverrideCountry)
             SettingView(setting: $playgroundController.settings.externalPaymentMethods)
             SettingView(setting: $playgroundController.settings.preferredNetworksEnabled)
@@ -91,7 +92,7 @@ struct PaymentSheetTestPlayground: View {
                         }
                         SettingView(setting: $playgroundController.settings.mode)
                         SettingPickerView(setting: $playgroundController.settings.integrationType)
-                        SettingView(setting: $playgroundController.settings.customerKeyType)
+                        SettingView(setting: customerKeyTypeBinding)
                         SettingView(setting: customerModeBinding)
                         SettingPickerView(setting: $playgroundController.settings.currency)
                         SettingPickerView(setting: merchantCountryBinding)
@@ -138,6 +139,26 @@ struct PaymentSheetTestPlayground: View {
         }
     }
 
+    var customerKeyTypeBinding: Binding<PaymentSheetTestPlaygroundSettings.CustomerKeyType> {
+        Binding<PaymentSheetTestPlaygroundSettings.CustomerKeyType> {
+            return playgroundController.settings.customerKeyType
+        } set: { newMode in
+            if newMode == .legacy {
+                playgroundController.settings.optOutCollectConsent = .disabled
+            }
+            playgroundController.settings.customerKeyType = newMode
+        }
+    }
+    var consentCheckboxBinding: Binding<PaymentSheetTestPlaygroundSettings.OptOutConsentCheckbox> {
+        Binding<PaymentSheetTestPlaygroundSettings.OptOutConsentCheckbox> {
+            return playgroundController.settings.optOutCollectConsent
+        } set: { newMode in
+            if newMode == .enabled {
+                playgroundController.settings.customerKeyType = .customerSession
+            }
+            playgroundController.settings.optOutCollectConsent = newMode
+        }
+    }
     var customCTABinding: Binding<String> {
         Binding<String> {
             return playgroundController.settings.customCtaLabel ?? ""

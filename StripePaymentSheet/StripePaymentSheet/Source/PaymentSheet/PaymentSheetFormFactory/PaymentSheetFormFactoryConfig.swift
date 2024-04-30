@@ -101,4 +101,18 @@ enum PaymentSheetFormFactoryConfig {
             return config.isUsingBillingAddressCollection()
         }
     }
+
+    var savePaymentMethodConsentBehavior: PaymentSheet.Configuration.SavePaymentMethodConsentCheckboxDisplayBehavior {
+        switch self {
+        case .paymentSheet(let config):
+            if case .customerSession = config.customer?.customerAccessProvider {
+                return config.optOutCollectingConsentForSavedPaymentMethods ? .optOutConsentCheckbox : .showConsentCheckbox
+            } else {
+                return .legacy
+            }
+        case .customerSheet:
+            // TODO: Determine if checkbox is needed
+            return .legacy
+        }
+    }
 }
