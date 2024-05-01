@@ -524,6 +524,14 @@ extension PaymentSheet.CustomerConfiguration {
     }
 }
 extension PaymentSheet.Configuration {
+    internal var savePaymentMethodConsentBehavior: PaymentSheet.Configuration.SavePaymentMethodConsentCheckboxDisplayBehavior {
+        if case .customerSession = self.customer?.customerAccessProvider {
+            return self.optOutCollectingConsentForSavedPaymentMethods ? .optOutConsentCheckbox : .showConsentCheckbox
+        } else {
+            return .legacy
+        }
+    }
+
     /// Modes for collecting consent when saving a payment method
     internal enum SavePaymentMethodConsentCheckboxDisplayBehavior: Equatable {
         /// Only shows a checkbox for savable payment methods when both are true:
@@ -555,5 +563,9 @@ extension PaymentSheet.Configuration {
         ///     Checkbox is shown, but is unchecked -  "limited"
         ///     Checkbox is shown, and is checked - "always"
         case showConsentCheckbox
+
+        /// Used for customerSheet.  No checkbox is shown, but consent is implicit due to UX.
+        /// If using CustomerSessions, allow_redisplay is "always", otherwise "unspecified"
+        case consentImplicit(STPPaymentMethodAllowRedisplay)
     }
 }

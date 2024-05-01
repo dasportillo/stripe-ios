@@ -34,12 +34,14 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         let params = IntentConfirmParams(type: selectedPaymentMethodType)
         params.setDefaultBillingDetailsIfNecessary(for: configuration)
         if let params = paymentMethodFormElement.updateParams(params: params) {
+            params.setAllowRedisplay(for: .consentImplicit(customerAdapter.allowRedisplayValue))
             return .new(confirmParams: params)
         }
         return nil
     }
     // MARK: - Writable Properties
     private let configuration: CustomerSheet.Configuration
+    private let customerAdapter: CustomerAdapter
 
     // We are keeping usBankAccountInfo in memory to preserve state if the user switches payment method types
     private var usBankAccountFormElement: USBankAccountPaymentMethodElement?
@@ -119,6 +121,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
 
     required init(
         configuration: CustomerSheet.Configuration,
+        customerAdapter: CustomerAdapter,
         paymentMethodTypes: [PaymentSheet.PaymentMethodType],
         cbcEligible: Bool,
         delegate: CustomerAddPaymentMethodViewControllerDelegate
@@ -133,6 +136,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         stpAssert(!paymentMethodTypes.isEmpty, "At least one payment method type must be available.")
         self.paymentMethodTypes = paymentMethodTypes
         self.cbcEligible = cbcEligible
+        self.customerAdapter = customerAdapter
         super.init(nibName: nil, bundle: nil)
         self.view.backgroundColor = configuration.appearance.colors.background
     }
@@ -223,7 +227,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         sendEventToSubviews(.viewDidAppear, from: view)
     }
     private func makeElement(for type: PaymentSheet.PaymentMethodType) -> PaymentMethodElement {
-        let configuration = PaymentSheetFormFactoryConfig.customerSheet(configuration)
+        let configuration = PaymentSheetFormFactoryConfig.customerSheet(configuration, customerAdapter)
         let formElement = PaymentSheetFormFactory(
             configuration: configuration,
             paymentMethod: type,

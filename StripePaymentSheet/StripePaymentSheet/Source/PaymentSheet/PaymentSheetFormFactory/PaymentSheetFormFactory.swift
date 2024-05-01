@@ -46,10 +46,13 @@ class PaymentSheetFormFactory {
     }
 
     var shouldDisplaySaveCheckbox: Bool {
-        if configuration.savePaymentMethodConsentBehavior == .showConsentCheckbox {
-            return configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
-        } else {
+        switch configuration.savePaymentMethodConsentBehavior {
+        case .legacy, .optOutConsentCheckbox:
             return !isSettingUp && configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
+        case .showConsentCheckbox:
+            return configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
+        case .consentImplicit:
+            return false
         }
     }
 
@@ -389,22 +392,8 @@ extension PaymentSheetFormFactory {
         return PaymentMethodElementWrapper(element) { checkbox, params in
             if checkbox.checkboxButton.isHidden {
                 params.consentCheckboxState = .hidden
-                /* TODO: Decide rules for allowRedisplay
-                switch self.configuration.savePaymentMethodConsentBehavior {
-                case .legacy:
-                    params.paymentMethodParams.allowRedisplay = .unspecified
-                case .optOutConsentCheckbox:
-                    params.paymentMethodParams.allowRedisplay = .limited
-                case .showConsentCheckbox:
-                    // TODO: Send event for error state
-                    params.paymentMethodParams.allowRedisplay = .unspecified
-                }
-                */
             } else {
                 params.consentCheckboxState = checkbox.checkboxButton.isSelected ? .selected : .deselected
-                /* TODO: Decide rules for allowRedisplay
-                 params.paymentMethodParams.allowRedisplay = checkbox.checkboxButton.isSelected ? .always : .limited
-                 */
             }
             return params
         }

@@ -82,6 +82,11 @@ public protocol CustomerAdapter {
     /// If you are implementing your own <CustomerAdapter>:
     /// Return `true` if setupIntentClientSecretForCustomerAttach is implemented. Otherwise, return false.
     var canCreateSetupIntents: Bool { get }
+
+    /// The value used allow_redisplay when saving a new payment method
+    /// For more information, see:
+    /// https://docs.stripe.com/api/payment_methods/object#payment_method_object-allow_redisplay
+    var allowRedisplayValue: STPPaymentMethodAllowRedisplay { get }
 }
 
 /// An ephemeral key for the Stripe Customer
@@ -232,6 +237,14 @@ open class StripeCustomerAdapter: CustomerAdapter {
 
     public var canCreateSetupIntents: Bool {
         return setupIntentClientSecretProvider != nil
+    }
+
+    public var allowRedisplayValue: STPPaymentMethodAllowRedisplay {
+        if customerSessionClientSecretProvider != nil {
+            return .always
+        } else {
+            return .unspecified
+        }
     }
 
     open func fetchPaymentMethods() async throws -> [STPPaymentMethod] {

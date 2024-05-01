@@ -9,7 +9,7 @@ import Foundation
 
 enum PaymentSheetFormFactoryConfig {
     case paymentSheet(PaymentSheet.Configuration)
-    case customerSheet(CustomerSheet.Configuration)
+    case customerSheet(CustomerSheet.Configuration, CustomerAdapter)
 
     var hasCustomer: Bool {
         switch self {
@@ -23,7 +23,7 @@ enum PaymentSheetFormFactoryConfig {
         switch self {
         case .paymentSheet(let config):
             return config.merchantDisplayName
-        case .customerSheet(let config):
+        case .customerSheet(let config, _):
             return config.merchantDisplayName
         }
     }
@@ -47,7 +47,7 @@ enum PaymentSheetFormFactoryConfig {
         switch self {
         case .paymentSheet(let config):
             return config.billingDetailsCollectionConfiguration
-        case .customerSheet(let config):
+        case .customerSheet(let config, _):
             return config.billingDetailsCollectionConfiguration
         }
     }
@@ -55,7 +55,7 @@ enum PaymentSheetFormFactoryConfig {
         switch self {
         case .paymentSheet(let config):
             return config.appearance
-        case .customerSheet(let config):
+        case .customerSheet(let config, _):
             return config.appearance
         }
     }
@@ -63,7 +63,7 @@ enum PaymentSheetFormFactoryConfig {
         switch self {
         case .paymentSheet(let config):
             return config.defaultBillingDetails
-        case .customerSheet(let config):
+        case .customerSheet(let config, _):
             return config.defaultBillingDetails
         }
     }
@@ -88,7 +88,7 @@ enum PaymentSheetFormFactoryConfig {
         switch self {
         case .paymentSheet(let config):
             return config.preferredNetworks
-        case .customerSheet(let config):
+        case .customerSheet(let config, _):
             return config.preferredNetworks
         }
     }
@@ -96,8 +96,8 @@ enum PaymentSheetFormFactoryConfig {
     var isUsingBillingAddressCollection: Bool {
         switch self {
         case .paymentSheet(let config):
-            return config.requiresBillingDetailCollection()
-        case .customerSheet(let config):
+            return config.isUsingBillingAddressCollection()
+        case .customerSheet(let config, _):
             return config.isUsingBillingAddressCollection()
         }
     }
@@ -110,9 +110,10 @@ enum PaymentSheetFormFactoryConfig {
             } else {
                 return .legacy
             }
-        case .customerSheet:
-            // TODO: Determine if checkbox is needed
-            return .legacy
+        case .customerSheet(_, let customerAdapter):
+            assert(customerAdapter.allowRedisplayValue == .always || customerAdapter.allowRedisplayValue == .unspecified,
+                   "CustomerAdapter should either return 'always' or 'unspecified'")
+            return .consentImplicit(customerAdapter.allowRedisplayValue)
         }
     }
 }

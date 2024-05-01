@@ -53,6 +53,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     private lazy var addPaymentMethodViewController: CustomerAddPaymentMethodViewController = {
         return CustomerAddPaymentMethodViewController(
             configuration: configuration,
+            customerAdapter: customerAdapter,
             paymentMethodTypes: paymentMethodTypes,
             cbcEligible: cbcEligible,
             delegate: self)
@@ -630,6 +631,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     private func reinitAddPaymentMethodViewController() {
         self.addPaymentMethodViewController = CustomerAddPaymentMethodViewController(
             configuration: configuration,
+            customerAdapter: customerAdapter,
             paymentMethodTypes: paymentMethodTypes,
             cbcEligible: cbcEligible,
             delegate: self)

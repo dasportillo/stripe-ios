@@ -76,6 +76,7 @@ class AddPaymentMethodViewController: UIViewController {
         let params = IntentConfirmParams(type: selectedPaymentMethodType)
         params.setDefaultBillingDetailsIfNecessary(for: configuration)
         if let params = paymentMethodFormElement.updateParams(params: params) {
+            params.setAllowRedisplay(for: configuration.savePaymentMethodConsentBehavior)
             if case .external(let paymentMethod) = selectedPaymentMethodType {
                 return .external(paymentMethod: paymentMethod, billingDetails: params.paymentMethodParams.nonnil_billingDetails)
             }
