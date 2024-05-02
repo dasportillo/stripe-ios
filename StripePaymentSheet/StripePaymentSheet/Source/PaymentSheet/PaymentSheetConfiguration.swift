@@ -146,18 +146,19 @@ extension PaymentSheet {
         /// @see SavePaymentMethodOptInBehavior
         public var savePaymentMethodOptInBehavior: SavePaymentMethodOptInBehavior = .automatic
 
-        /// When integrated with CustomerSession, this flag controls the visibility of a checkbox to collect shopper consent
-        /// when saving a payment method to the merchant.
+        /// When integrated with CustomerSession, this flag controls the visibility
+        /// of a checkbox to collect shopper consent when saving a payment method to
+        /// the merchant.
         ///
         ///  If `hideConsentCheckboxForSavingPaymentMethods` is set to `false`
         ///  For PaymentIntent, PaymentIntent+SFU, SetupIntent:
-        ///     Checkbox is shown, unchecked: `allow_redisplay` = `limited`
-        ///     Checkbox is shown, checked: `allow_redisplay` = `always`
+        ///     Checkbox is shown. If unchecked: `allow_redisplay` = `limited`
+        ///     Checkbox is shown. If checked: `allow_redisplay` = `always`
         ///
         ///  If `hideConsentCheckboxForSavingPaymentMethods` is set to `true`
         ///    For PaymentIntent:
-        ///       Checkbox is shown, unchecked: `allow_redisplay` = `limited`
-        ///       Checkbox is shown, checked: `allow_redisplay` = `always`
+        ///       Checkbox is shown. If unchecked: `allow_redisplay` = `limited`
+        ///       Checkbox is shown. If checked: `allow_redisplay` = `always`
         ///    For PaymentIntent+SFU, SetupIntent:
         ///       'No checkbox shown: `allow_redisplay` = `limited`
         ///
