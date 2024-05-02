@@ -334,8 +334,8 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case off
     }
 
-    enum OptOutConsentCheckbox: String, PickerEnum {
-        static var enumName: String { "Opt out consent Checkbox" }
+    enum HideConsentCheckbox: String, PickerEnum {
+        static var enumName: String { "Hide consent checkbox" }
         case disabled
         case enabled
     }
@@ -373,7 +373,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var externalPaymentMethods: ExternalPaymentMethods
     var preferredNetworksEnabled: PreferredNetworksEnabled
     var requireCVCRecollection: RequireCVCRecollectionEnabled
-    var optOutCollectConsent: OptOutConsentCheckbox
+    var hideCollectConsent: HideConsentCheckbox
 
     var allowsRemovalOfLastSavedPaymentMethod: AllowsRemovalOfLastSavedPaymentMethodEnabled
 
@@ -410,7 +410,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             externalPaymentMethods: .off,
             preferredNetworksEnabled: .off,
             requireCVCRecollection: .off,
-            optOutCollectConsent: .disabled,
+            hideCollectConsent: .disabled,
             allowsRemovalOfLastSavedPaymentMethod: .on,
             attachDefaults: .off,
             collectName: .automatic,

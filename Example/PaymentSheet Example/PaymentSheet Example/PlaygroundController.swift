@@ -104,8 +104,8 @@ class PlaygroundController: ObservableObject {
         return nil
     }
 
-    var optOutCollectingConsentForSavedPaymentMethods: Bool {
-        switch settings.optOutCollectConsent {
+    var hideConsentCheckboxForSavingPaymentMethods: Bool {
+        switch settings.hideCollectConsent {
         case .disabled:
             return false
         case .enabled:
@@ -167,7 +167,7 @@ class PlaygroundController: ObservableObject {
                 return self?.addressDetails
             }
         }
-        configuration.optOutCollectingConsentForSavedPaymentMethods = optOutCollectingConsentForSavedPaymentMethods
+        configuration.hideConsentCheckboxForSavingPaymentMethods = hideConsentCheckboxForSavingPaymentMethods
         configuration.primaryButtonLabel = settings.customCtaLabel
 
         configuration.billingDetailsCollectionConfiguration.name = .init(rawValue: settings.collectName.rawValue)!

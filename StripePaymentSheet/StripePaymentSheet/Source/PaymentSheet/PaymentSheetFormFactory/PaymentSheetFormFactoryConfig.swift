@@ -106,7 +106,7 @@ enum PaymentSheetFormFactoryConfig {
         switch self {
         case .paymentSheet(let config):
             if case .customerSession = config.customer?.customerAccessProvider {
-                return config.optOutCollectingConsentForSavedPaymentMethods ? .optOutConsentCheckbox : .showConsentCheckbox
+                return config.hideConsentCheckboxForSavingPaymentMethods ? .hideConsentCheckbox : .showConsentCheckbox
             } else {
                 return .legacy
             }

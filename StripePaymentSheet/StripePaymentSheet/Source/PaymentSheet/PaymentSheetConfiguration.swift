@@ -146,8 +146,24 @@ extension PaymentSheet {
         /// @see SavePaymentMethodOptInBehavior
         public var savePaymentMethodOptInBehavior: SavePaymentMethodOptInBehavior = .automatic
 
-        /// Controls visibility of a checkbox to collect shopper consent when saving a payment method to the merchant
-        @_spi(STP) public var optOutCollectingConsentForSavedPaymentMethods: Bool = false
+        /// When integrated with CustomerSession, this flag controls the visibility of a checkbox to collect shopper consent
+        /// when saving a payment method to the merchant.
+        ///
+        ///  If `hideConsentCheckboxForSavingPaymentMethods` is set to `false`
+        ///  For PaymentIntent, PaymentIntent+SFU, SetupIntent:
+        ///     Checkbox is shown, unchecked: `allow_redisplay` = `limited`
+        ///     Checkbox is shown, checked: `allow_redisplay` = `always`
+        ///
+        ///  If `hideConsentCheckboxForSavingPaymentMethods` is set to `true`
+        ///    For PaymentIntent:
+        ///       Checkbox is shown, unchecked: `allow_redisplay` = `limited`
+        ///       Checkbox is shown, checked: `allow_redisplay` = `always`
+        ///    For PaymentIntent+SFU, SetupIntent:
+        ///       'No checkbox shown: `allow_redisplay` = `limited`
+        ///
+        /// For more information on `allow_redisplay`:
+        /// https://docs.stripe.com/api/payment_methods/object#payment_method_object-allow_redisplay
+        @_spi(STP) public var hideConsentCheckboxForSavingPaymentMethods: Bool = false
 
         /// Describes the appearance of PaymentSheet
         public var appearance = PaymentSheet.Appearance.default
@@ -526,7 +542,7 @@ extension PaymentSheet.CustomerConfiguration {
 extension PaymentSheet.Configuration {
     internal var savePaymentMethodConsentBehavior: PaymentSheet.Configuration.SavePaymentMethodConsentCheckboxDisplayBehavior {
         if case .customerSession = self.customer?.customerAccessProvider {
-            return self.optOutCollectingConsentForSavedPaymentMethods ? .optOutConsentCheckbox : .showConsentCheckbox
+            return self.hideConsentCheckboxForSavingPaymentMethods ? .hideConsentCheckbox : .showConsentCheckbox
         } else {
             return .legacy
         }
@@ -534,38 +550,9 @@ extension PaymentSheet.Configuration {
 
     /// Modes for collecting consent when saving a payment method
     internal enum SavePaymentMethodConsentCheckboxDisplayBehavior: Equatable {
-        /// Only shows a checkbox for savable payment methods when both are true:
-        ///  Using a PaymentIntent with SFU disabled
-        ///  `customer` is passed into PaymentSheet.Configuration
-        ///
-        ///  The following values are sent for allow_redisplay:
-        ///  For PaymentIntent+SFU, SetupIntent:
-        ///     No checkbox shown - "unspecified"
-        ///  For PaymentIntent:
-        ///     Checkbox is shown, but is unchecked -  "limited"
-        ///     Checkbox is shown, and is checked - "always"
         case legacy
-
-        /// Same UX as 'legacy', however following values are sent for alllow_redisplay:
-        ///
-        ///  For PaymentIntent+SFU, SetupIntent:
-        ///     'No checkbox shown - "limited"
-        ///  For PaymentIntent:
-        ///     Checkbox is shown, but is unchecked -  "limited"
-        ///     Checkbox is shown, and is checked - "always"
-        case optOutConsentCheckbox
-
-        /// Always shows a consent checkbox for savable payment methods to set the value of allow_redisplay on the payment method.
-        /// For more information, see:
-        /// https://docs.stripe.com/api/payment_methods/object#payment_method_object-allow_redisplay
-        ///
-        ///  For PaymentIntent, PaymentIntent+SFU, SetupIntent:
-        ///     Checkbox is shown, but is unchecked -  "limited"
-        ///     Checkbox is shown, and is checked - "always"
+        case hideConsentCheckbox
         case showConsentCheckbox
-
-        /// Used for customerSheet.  No checkbox is shown, but consent is implicit due to UX.
-        /// If using CustomerSessions, allow_redisplay is "always", otherwise "unspecified"
         case consentImplicit(STPPaymentMethodAllowRedisplay)
     }
 }

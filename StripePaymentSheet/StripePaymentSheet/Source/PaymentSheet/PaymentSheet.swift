@@ -109,7 +109,7 @@ public class PaymentSheet {
         self.mode = mode
         self.configuration = configuration
         if case .legacyCustomerEphemeralKey = configuration.customer?.customerAccessProvider {
-            assert(configuration.optOutCollectingConsentForSavedPaymentMethods == false,
+            assert(configuration.hideConsentCheckboxForSavingPaymentMethods == false,
                    "Changing the consent checkbox behavior is not supported for legacy ephemeral keys. Integrate with CustomerSessions to use this feature.  See: https://docs.stripe.com/api/customer_sessions")
         }
 

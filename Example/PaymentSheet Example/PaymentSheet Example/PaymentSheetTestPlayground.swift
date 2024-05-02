@@ -144,19 +144,19 @@ struct PaymentSheetTestPlayground: View {
             return playgroundController.settings.customerKeyType
         } set: { newMode in
             if newMode == .legacy {
-                playgroundController.settings.optOutCollectConsent = .disabled
+                playgroundController.settings.hideCollectConsent = .disabled
             }
             playgroundController.settings.customerKeyType = newMode
         }
     }
-    var consentCheckboxBinding: Binding<PaymentSheetTestPlaygroundSettings.OptOutConsentCheckbox> {
-        Binding<PaymentSheetTestPlaygroundSettings.OptOutConsentCheckbox> {
-            return playgroundController.settings.optOutCollectConsent
+    var consentCheckboxBinding: Binding<PaymentSheetTestPlaygroundSettings.HideConsentCheckbox> {
+        Binding<PaymentSheetTestPlaygroundSettings.HideConsentCheckbox> {
+            return playgroundController.settings.hideCollectConsent
         } set: { newMode in
             if newMode == .enabled {
                 playgroundController.settings.customerKeyType = .customerSession
             }
-            playgroundController.settings.optOutCollectConsent = newMode
+            playgroundController.settings.hideCollectConsent = newMode
         }
     }
     var customCTABinding: Binding<String> {

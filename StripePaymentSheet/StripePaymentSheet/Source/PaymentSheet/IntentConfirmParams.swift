@@ -109,7 +109,7 @@ class IntentConfirmParams {
         case .legacy:
             // Always send unspecified
             paymentMethodParams.allowRedisplay = .unspecified
-        case .optOutConsentCheckbox:
+        case .hideConsentCheckbox:
             switch consentCheckboxState {
             case .hidden:
                 // For PI+SFU & SI:

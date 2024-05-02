@@ -47,7 +47,7 @@ class PaymentSheetFormFactory {
 
     var shouldDisplaySaveCheckbox: Bool {
         switch configuration.savePaymentMethodConsentBehavior {
-        case .legacy, .optOutConsentCheckbox:
+        case .legacy, .hideConsentCheckbox:
             return !isSettingUp && configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
         case .showConsentCheckbox:
             return configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
