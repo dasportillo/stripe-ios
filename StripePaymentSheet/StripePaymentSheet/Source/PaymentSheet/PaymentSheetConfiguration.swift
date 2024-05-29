@@ -201,6 +201,7 @@ extension PaymentSheet {
 
         /// Prototype: To be added to customer session configuration
         @_spi(STP) public var paymentMethodRemove = true
+        @_spi(STP) public var paymentMethodSave = true
 
         /// Configuration for external payment methods.
         public var externalPaymentMethodConfiguration: ExternalPaymentMethodConfiguration?

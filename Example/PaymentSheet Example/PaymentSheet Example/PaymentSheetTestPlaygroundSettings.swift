@@ -162,7 +162,12 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
 
         case enabled
         case disabled
-        case unspecified
+    }
+    enum PaymentMethodSave: String, PickerEnum {
+        static var enumName: String { "PaymentMethodSave" }
+
+        case enabled
+        case disabled
     }
 
     enum DefaultBillingAddress: String, PickerEnum {
@@ -335,12 +340,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case off
     }
 
-    enum HideConsentCheckbox: String, PickerEnum {
-        static var enumName: String { "Hide consent checkbox" }
-        case disabled
-        case enabled
-    }
-
     enum AllowsRemovalOfLastSavedPaymentMethodEnabled: String, PickerEnum {
         static let enumName: String = "allowsRemovalOfLastSavedPaymentMethod"
         case on
@@ -363,6 +362,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var applePayButtonType: ApplePayButtonType
     var allowsDelayedPMs: AllowsDelayedPMs
     var paymentMethodRemove: PaymentMethodRemove
+    var paymentMethodSave: PaymentMethodSave
     var defaultBillingAddress: DefaultBillingAddress
     var customEmail: String?
     var linkEnabled: LinkEnabled
@@ -374,7 +374,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var externalPaymentMethods: ExternalPaymentMethods
     var preferredNetworksEnabled: PreferredNetworksEnabled
     var requireCVCRecollection: RequireCVCRecollectionEnabled
-    var hideCollectConsent: HideConsentCheckbox
 
     var allowsRemovalOfLastSavedPaymentMethod: AllowsRemovalOfLastSavedPaymentMethodEnabled
 
@@ -400,6 +399,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             applePayButtonType: .buy,
             allowsDelayedPMs: .off,
             paymentMethodRemove: .enabled,
+            paymentMethodSave: .enabled,
             defaultBillingAddress: .off,
             customEmail: nil,
             linkEnabled: .off,
@@ -411,7 +411,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             externalPaymentMethods: .off,
             preferredNetworksEnabled: .off,
             requireCVCRecollection: .off,
-            hideCollectConsent: .disabled,
             allowsRemovalOfLastSavedPaymentMethod: .on,
             attachDefaults: .off,
             collectName: .automatic,

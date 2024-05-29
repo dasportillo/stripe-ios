@@ -104,15 +104,6 @@ class PlaygroundController: ObservableObject {
         return nil
     }
 
-    var hideConsentCheckboxForSavingPaymentMethods: Bool {
-        switch settings.hideCollectConsent {
-        case .disabled:
-            return false
-        case .enabled:
-            return true
-        }
-    }
-
     var configuration: PaymentSheet.Configuration {
         var configuration = PaymentSheet.Configuration()
         configuration.externalPaymentMethodConfiguration = externalPaymentMethodConfiguration
@@ -160,6 +151,7 @@ class PlaygroundController: ObservableObject {
             configuration.allowsDelayedPaymentMethods = true
         }
         configuration.paymentMethodRemove = settings.paymentMethodRemove == .enabled
+        configuration.paymentMethodSave = settings.paymentMethodSave == .enabled
 
         if settings.shippingInfo != .off {
             configuration.allowsPaymentMethodsRequiringShippingAddress = true
@@ -167,7 +159,6 @@ class PlaygroundController: ObservableObject {
                 return self?.addressDetails
             }
         }
-        configuration.hideConsentCheckboxForSavingPaymentMethods = hideConsentCheckboxForSavingPaymentMethods
         configuration.primaryButtonLabel = settings.customCtaLabel
 
         configuration.billingDetailsCollectionConfiguration.name = .init(rawValue: settings.collectName.rawValue)!
