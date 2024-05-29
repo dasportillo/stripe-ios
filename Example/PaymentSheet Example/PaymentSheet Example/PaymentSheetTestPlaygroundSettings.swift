@@ -162,6 +162,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
 
         case enabled
         case disabled
+        case unspecified
     }
 
     enum DefaultBillingAddress: String, PickerEnum {

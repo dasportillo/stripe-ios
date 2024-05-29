@@ -109,6 +109,14 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
 
         case enabled
         case disabled
+        case unspecified
+    }
+    enum PaymentMethodSave: String, PickerEnum {
+        static let enumName: String = "PaymentMethodSave"
+
+        case enabled
+        case disabled
+        case unspecified
     }
 
     var customerMode: CustomerMode
@@ -129,6 +137,7 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
     var preferredNetworksEnabled: PreferredNetworksEnabled
     var allowsRemovalOfLastSavedPaymentMethod: AllowsRemovalOfLastSavedPaymentMethod
     var paymentMethodRemove: PaymentMethodRemove
+    var paymentMethodSave: PaymentMethodSave
 
     static func defaultValues() -> CustomerSheetTestPlaygroundSettings {
         return CustomerSheetTestPlaygroundSettings(customerMode: .new,
@@ -147,7 +156,8 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
                                                    merchantCountryCode: .US,
                                                    preferredNetworksEnabled: .off,
                                                    allowsRemovalOfLastSavedPaymentMethod: .on,
-                                                   paymentMethodRemove: .enabled)
+                                                   paymentMethodRemove: .enabled,
+                                                   paymentMethodSave: .enabled)
     }
 
     var base64Data: String {
